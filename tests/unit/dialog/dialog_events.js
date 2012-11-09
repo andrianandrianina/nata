@@ -39,6 +39,34 @@ test("open", function() {
 	el.remove();
 });
 
+
+test( "focus", function() {
+	expect( 4 );
+	var sequence = 0,
+		step = 0,
+		el = $("#dialog1").dialog({
+			open: function() {
+				equal( sequence, 0, "open" );
+			},
+			focus: function() {
+				// 1. on open, after the open event
+				// 2. when opening and already open, and wasn't on top
+				// 3. when mousedown anywhere on the dialog and it wasn't on top
+				equal( sequence, step, "focus");
+			}
+		}),
+		other = $("#dialog2").dialog();
+	sequence = step = 1;
+	el.dialog( "moveToTop" );
+
+	sequence = step = 2;
+	other.dialog( "moveToTop" );
+	el.trigger( "mousedown" );
+	el.trigger( "mousedown" );
+
+	el.add( other ).remove();
+});
+
 test("dragStart", function() {
 	expect(9);
 
